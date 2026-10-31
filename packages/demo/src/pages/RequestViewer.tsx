@@ -1,7 +1,6 @@
 import {
 	css,
 	type Component,
-	type Delegate,
 	createState,
 } from "dreamland/core";
 import {
@@ -835,7 +834,7 @@ const RequestViewer: Component<
 				method: context.request.method,
 				url,
 				time: new Date().toLocaleTimeString(),
-				destination: context.request.destination,
+				destination: context.request.rawDestination,
 				mode: context.request.mode,
 				requestHeadersPre: reqHeadersPre,
 				requestHeaders: reqHeaders,

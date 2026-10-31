@@ -411,7 +411,8 @@ export class ScramjetClient {
 					// or we're cross-origin and frameElement doesn't exist. that's a TODO because this won't work
 					return null;
 				}
-				if (!frame.name) {
+				const frameName = frame.getAttribute("name");
+				if (!frameName) {
 					// the top frame is scramjet-controlled, but it has no name. this is user error
 					dbg.error(
 						"YOU NEED TO USE `new ScramjetFrame()`! DIRECT IFRAMES WILL NOT WORK"
@@ -420,7 +421,7 @@ export class ScramjetClient {
 					return null;
 				}
 
-				return frame.name;
+				return frameName;
 			},
 			get parentFrameName() {
 				if (!iswindow)
@@ -451,7 +452,8 @@ export class ScramjetClient {
 							return null;
 						}
 
-						if (!frame.name) {
+						const frameName = frame.getAttribute("name");
+						if (!frameName) {
 							// the parent frame is scramjet-controlled, but it has no name. this is user error
 							dbg.error(
 								"YOU NEED TO USE `new ScramjetFrame()`! DIRECT IFRAMES WILL NOT WORK"
@@ -460,7 +462,7 @@ export class ScramjetClient {
 							return null;
 						}
 
-						return frame.name;
+						return frameName;
 					} else {
 						// we're inside an iframe, and the parent is not scramjet-controlled
 						// return our own frame name
@@ -468,7 +470,8 @@ export class ScramjetClient {
 							"window.frameElement",
 							client.global
 						);
-						if (!frame.name) {
+						const frameName = frame.getAttribute("name");
+						if (!frameName) {
 							// the parent frame is not scramjet-controlled, so we can't get a parent frame name
 							dbg.error(
 								"YOU NEED TO USE `new ScramjetFrame()`! DIRECT IFRAMES WILL NOT WORK"
@@ -477,7 +480,7 @@ export class ScramjetClient {
 							return null;
 						}
 
-						return frame.name;
+						return frameName;
 					}
 				} catch {
 					return null;

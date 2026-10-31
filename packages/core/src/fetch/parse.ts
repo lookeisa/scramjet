@@ -7,6 +7,8 @@ import {
 	ScramjetFetchTrackedClient,
 } from ".";
 
+export type ScramjetRequestMode = RequestMode;
+
 export const QP = {
 	referrerPolicy: "$rfp",
 	referrerSource: "$rfs",
@@ -105,11 +107,9 @@ export function parseRequest(
 			? params.fetchSite
 			: undefined;
 
-	const fetchMode = ["cors", "no-cors", "same-origin", "navigate"].includes(
-		params.mode
-	)
-		? params.mode
-		: undefined;
+	const fetchMode = (
+		["cors", "no-cors", "same-origin", "navigate"] as const
+	).find((mode) => mode === params.mode);
 	const destination =
 		(params.destination as RequestDestination | undefined) ||
 		request.rawDestination;

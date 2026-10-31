@@ -132,15 +132,7 @@ type WrappedConstructor<T> =
 						new <K extends WeakKey, V>(...args: Args) => Wrapped<WeakMap<K, V>>
 					>
 				: never
-			: ConstructorPrototype<T> extends WeakSet<any>
-				? T extends { new <U extends object>(...args: infer Args): any }
-					? WrappedCtor<
-							T,
-							[object],
-							new <U extends object>(...args: Args) => Wrapped<WeakSet<U>>
-						>
-					: never
-				: ConstructorPrototype<T> extends Set<any>
+			: ConstructorPrototype<T> extends Set<any>
 					? T extends { new <U>(...args: infer Args): any }
 						? WrappedCtor<
 								T,
@@ -148,33 +140,41 @@ type WrappedConstructor<T> =
 								new <U>(...args: Args) => Wrapped<Set<U>>
 							>
 						: never
-					: T extends { new <K, V>(...args: infer Args): any }
-						? WrappedCtor<
-								T,
-								[unknown, unknown],
-								new <K, V>(
-									...args: Args
-								) => Wrapped<
-									InstantiatePrototype<ConstructorPrototype<T>, [K, V]>
-								>
-							>
-						: T extends { new <U>(...args: infer Args): any }
-							? WrappedCtor<
-									T,
-									[unknown],
-									new <U>(
-										...args: Args
-									) => Wrapped<
-										InstantiatePrototype<ConstructorPrototype<T>, [U]>
+						: ConstructorPrototype<T> extends WeakSet<any>
+							? T extends { new <U extends object>(...args: infer Args): any }
+								? WrappedCtor<
+										T,
+										[object],
+										new <U extends object>(...args: Args) => Wrapped<WeakSet<U>>
 									>
-								>
-							: T extends abstract new (...args: infer Args) => infer Instance
-								? Omit<T, "prototype"> & {
-										new (...args: Args): WrappedInstance<Instance>;
-										prototype: WrappedInstance<Instance>;
-										readonly [WrappedBrand]: T;
-									}
-								: never;
+								: never
+							: T extends { new <K, V>(...args: infer Args): any }
+								? WrappedCtor<
+										T,
+										[unknown, unknown],
+										new <K, V>(
+											...args: Args
+										) => Wrapped<
+											InstantiatePrototype<ConstructorPrototype<T>, [K, V]>
+										>
+									>
+								: T extends { new <U>(...args: infer Args): any }
+									? WrappedCtor<
+											T,
+											[unknown],
+											new <U>(
+												...args: Args
+											) => Wrapped<
+												InstantiatePrototype<ConstructorPrototype<T>, [U]>
+											>
+										>
+									: T extends abstract new (...args: infer Args) => infer Instance
+										? Omit<T, "prototype"> & {
+												new (...args: Args): WrappedInstance<Instance>;
+												prototype: WrappedInstance<Instance>;
+												readonly [WrappedBrand]: T;
+											}
+										: never;
 
 export type Wrapped<T> = T extends abstract new (...args: any) => any
 	? WrappedConstructor<T>

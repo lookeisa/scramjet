@@ -1,6 +1,5 @@
 import {
 	css,
-	type Delegate,
 	type Component,
 	createState,
 } from "dreamland/core";

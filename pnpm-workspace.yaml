@@ -7,8 +7,14 @@ packages:
   - packages/demo
   - packages/bootstrap
   - packages/create-proxy-app
+  - packages/refract-shared
+  - packages/refract-transports
+  - packages/refract-core
+  - packages/refract-rewriter
+  - packages/refract-transport-fetch
 
 overrides:
+  "@types/node": 24.9.1
   htmlparser2: 12.0.0
 
 catalog:

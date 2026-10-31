@@ -17,7 +17,7 @@ import { createReferrerString } from "./util";
 /**
  * Headers for security policy features that haven't been emulated yet
  */
-const SEC_HEADERS = new _Set([
+const SEC_HEADERS = new _Set<string>([
 	"cross-origin-embedder-policy",
 	"cross-origin-opener-policy",
 	"cross-origin-resource-policy",
@@ -37,16 +37,16 @@ const SEC_HEADERS = new _Set([
 	// This needs to be emulated, but for right now it isn't that important of a feature to be worried about
 	// https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Clear-Site-Data
 	"clear-site-data",
-]) as _Set<string>;
+]);
 
 /**
  * Headers that are actually URLs that need to be rewritten
  */
-const URL_HEADERS = new _Set([
+const URL_HEADERS = new _Set<string>([
 	"location",
 	"content-location",
 	"referer",
-]) as _Set<string>;
+]);
 
 function rewriteLinkHeader(
 	link: string,

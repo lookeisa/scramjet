@@ -20,6 +20,7 @@ catalogs:
       version: 0.4.1
 
 overrides:
+  '@types/node': 24.9.1
   htmlparser2: 12.0.0
 
 patchedDependencies:
@@ -44,12 +45,18 @@ importers:
       '@rsdoctor/rspack-plugin':
         specifier: ^1.4.0
         version: 1.4.0(@rsbuild/core@1.6.14)(@rspack/core@1.6.7(@swc/helpers@0.5.17))(bufferutil@4.0.9)(webpack@5.104.1)
+      '@rsdoctor/types':
+        specifier: 1.4.0
+        version: 1.4.0(@rspack/core@1.6.7(@swc/helpers@0.5.17))(webpack@5.104.1)
       '@rspack/cli':
         specifier: ^1.5.8
         version: 1.5.8(@rspack/core@1.6.7(@swc/helpers@0.5.17))(@types/express@4.17.24)(bufferutil@4.0.9)(webpack@5.104.1)
       '@rspack/core':
         specifier: ^1.5.8
         version: 1.6.7(@swc/helpers@0.5.17)
+      '@types/node':
+        specifier: 24.9.1
+        version: 24.9.1
       ava:
         specifier: ^6.4.1
         version: 6.4.1(rollup@4.52.5)
@@ -71,9 +78,12 @@ importers:
       tsc-alias:
         specifier: ^1.8.16
         version: 1.8.16
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
       vite:
         specifier: ^7.3.0
-        version: 7.3.0(@types/node@26.0.1)(jiti@2.6.1)(terser@5.44.1)(yaml@2.8.1)
+        version: 7.3.0(@types/node@24.9.1)(jiti@2.6.1)(terser@5.44.1)(yaml@2.8.1)
 
   packages/bootstrap:
     dependencies:
@@ -153,8 +163,8 @@ importers:
         specifier: ^1.0.8
         version: 1.0.8
       '@types/node':
-        specifier: ^24.3.1
-        version: 24.9.0
+        specifier: 24.9.1
+        version: 24.9.1
       '@types/serviceworker':
         specifier: ^0.0.197
         version: 0.0.197
@@ -204,9 +214,12 @@ importers:
         specifier: ^2.10.0
         version: 2.15.1
     devDependencies:
+      '@types/fs-extra':
+        specifier: ^11.0.4
+        version: 11.0.4
       '@types/node':
-        specifier: ^26.0.1
-        version: 26.0.1
+        specifier: 24.9.1
+        version: 24.9.1
 
   packages/demo:
     dependencies:
@@ -234,10 +247,68 @@ importers:
     devDependencies:
       vite:
         specifier: ^7.3.1
-        version: 7.3.1(@types/node@26.0.1)(jiti@2.6.1)(terser@5.44.1)(yaml@2.8.1)
+        version: 7.3.1(@types/node@24.9.1)(jiti@2.6.1)(terser@5.44.1)(yaml@2.8.1)
       vite-plugin-static-copy:
         specifier: ^3.1.6
-        version: 3.1.6(vite@7.3.1(@types/node@26.0.1)(jiti@2.6.1)(terser@5.44.1)(yaml@2.8.1))
+        version: 3.1.6(vite@7.3.1(@types/node@24.9.1)(jiti@2.6.1)(terser@5.44.1)(yaml@2.8.1))
+
+  packages/refract-core:
+    dependencies:
+      '@refractjs/refract-rewriter':
+        specifier: workspace:*
+        version: link:../refract-rewriter
+      '@refractjs/refract-shared':
+        specifier: workspace:*
+        version: link:../refract-shared
+      '@refractjs/refract-transport-fetch':
+        specifier: workspace:*
+        version: link:../refract-transport-fetch
+      '@refractjs/refract-transports':
+        specifier: workspace:*
+        version: link:../refract-transports
+    devDependencies:
+      '@types/node':
+        specifier: 24.9.1
+        version: 24.9.1
+
+  packages/refract-rewriter:
+    dependencies:
+      '@refractjs/refract-shared':
+        specifier: workspace:*
+        version: link:../refract-shared
+    devDependencies:
+      '@types/node':
+        specifier: 24.9.1
+        version: 24.9.1
+
+  packages/refract-shared:
+    devDependencies:
+      '@types/node':
+        specifier: 24.9.1
+        version: 24.9.1
+
+  packages/refract-transport-fetch:
+    dependencies:
+      '@refractjs/refract-shared':
+        specifier: workspace:*
+        version: link:../refract-shared
+      '@refractjs/refract-transports':
+        specifier: workspace:*
+        version: link:../refract-transports
+    devDependencies:
+      '@types/node':
+        specifier: 24.9.1
+        version: 24.9.1
+
+  packages/refract-transports:
+    dependencies:
+      '@refractjs/refract-shared':
+        specifier: workspace:*
+        version: link:../refract-shared
+    devDependencies:
+      '@types/node':
+        specifier: 24.9.1
+        version: 24.9.1
 
   packages/rpc: {}
 
@@ -278,8 +349,8 @@ importers:
         specifier: ^2.0.6
         version: 2.0.6
       '@types/node':
-        specifier: ^22.0.0
-        version: 22.18.11
+        specifier: 24.9.1
+        version: 24.9.1
       '@types/ws':
         specifier: ^8.18.1
         version: 8.18.1
@@ -972,6 +1043,9 @@ packages:
   '@types/express@5.0.5':
     resolution: {integrity: sha512-LuIQOcb6UmnF7C1PCFmEU1u2hmiHL43fgFQX67sN3H4Z+0Yk0Neo++mFsBjhOAuLzvlQeqAAkeDOZrJs9rzumQ==}
 
+  '@types/fs-extra@11.0.4':
+    resolution: {integrity: sha512-yTbItCNreRooED33qjunPthRcSjERP1r4MqCZc7wv0u2sUkzTFp45tgUfS5+r7FrZPdmCCNflLhVSP/o+SemsQ==}
+
   '@types/http-errors@2.0.5':
     resolution: {integrity: sha512-r8Tayk8HJnX0FztbZN7oVqGccWgw98T/0neJphO91KkmOzug1KkofZURD4UaD5uH8AqcFLfdPErnBod0u71/qg==}
 
@@ -984,23 +1058,17 @@ packages:
   '@types/json-schema@7.0.15':
     resolution: {integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==}
 
+  '@types/jsonfile@6.1.4':
+    resolution: {integrity: sha512-D5qGUYwjvnNNextdU59/+fI+spnwtTFmyQP0h+PfIOSkNfpU6AOICUOkm4i0OnSk+NyjdPJrxCDro0sJsWlRpQ==}
+
   '@types/mime@1.3.5':
     resolution: {integrity: sha512-/pyBZWSLD2n0dcHE3hq8s8ZvcETHtEuF+3E7XVt0Ig2nvsVQXdghHVcEkIWjy9A0wKfTn97a/PSDYohKIlnP/w==}
 
   '@types/node-forge@1.3.14':
     resolution: {integrity: sha512-mhVF2BnD4BO+jtOp7z1CdzaK4mbuK0LLQYAvdOLqHTavxFNq4zA1EmYkpnFjP8HOUzedfQkRnp0E2ulSAYSzAw==}
 
-  '@types/node@22.18.11':
-    resolution: {integrity: sha512-Gd33J2XIrXurb+eT2ktze3rJAfAp9ZNjlBdh4SVgyrKEOADwCbdUDaK7QgJno8Ue4kcajscsKqu6n8OBG3hhCQ==}
-
-  '@types/node@24.9.0':
-    resolution: {integrity: sha512-MKNwXh3seSK8WurXF7erHPJ2AONmMwkI7zAMrXZDPIru8jRqkk6rGDBVbw4mLwfqA+ZZliiDPg05JQ3uW66tKQ==}
-
   '@types/node@24.9.1':
     resolution: {integrity: sha512-QoiaXANRkSXK6p0Duvt56W208du4P9Uye9hWLWgGMDTEoKPhuenzNcC4vGUmrNkiOKTlIrBoyNQYNpSwfEZXSg==}
-
-  '@types/node@26.0.1':
-    resolution: {integrity: sha512-fc3KiUoBt6kie0N9bIW3E47vZsuaMf0PM2AaUpLCLT0s/LvX1nxAim6Fc049cNxODPpGm6qRAuUOB86SkRuPQw==}
 
   '@types/qs@6.14.0':
     resolution: {integrity: sha512-eOunJqu0K1923aExK6y8p6fsihYEn/BYuQ4g0CxAAgFc4b/ZLN4CrsRZ55srTdqoiLzU2B2evC+apEIxprEzkQ==}
@@ -3156,14 +3224,8 @@ packages:
   ufo@1.6.1:
     resolution: {integrity: sha512-9a4/uxlTWJ4+a5i0ooc1rU7C7YOw3wT+UGqdeNNHWnOF9qcMBgLRS+4IYUqbczewFx4mLEig6gawh7X6mFlEkA==}
 
-  undici-types@6.21.0:
-    resolution: {integrity: sha512-iwDZqg0QAGrg9Rav5H4n0M64c3mkR59cJ6wQp+7C4nI0gsmExaedaYLNO44eT4AtBBwjbTiGPMlt2Md0T9H9JQ==}
-
   undici-types@7.16.0:
     resolution: {integrity: sha512-Zz+aZWSj8LE6zoxD+xrjh4VfkIG8Ya6LvYkZqtUQGJPZjYl53ypCaUwWqo7eI0x66KBGeRo+mlBEkMSeSZ38Nw==}
-
-  undici-types@8.3.0:
-    resolution: {integrity: sha512-j375ScV60dom+YkPFIfTLcOiPxkN/buHz5GobjLhixFuANaNs3C9l4GmrWqejgXWJ7BbJcFYpTEUkS1Ge8bpZQ==}
 
   unicorn-magic@0.3.0:
     resolution: {integrity: sha512-+QBBXBCvifc56fsbuxZQ6Sic3wqqc3WWaqxs58gvJrcOuN83HGTCwz3oS5phzU9LthRNE9VrJCFCLUgHeeFnfA==}
@@ -3216,7 +3278,7 @@ packages:
     engines: {node: ^20.19.0 || >=22.12.0}
     hasBin: true
     peerDependencies:
-      '@types/node': ^20.19.0 || >=22.12.0
+      '@types/node': 24.9.1
       jiti: '>=1.21.0'
       less: ^4.0.0
       lightningcss: ^1.21.0
@@ -3256,7 +3318,7 @@ packages:
     engines: {node: ^20.19.0 || >=22.12.0}
     hasBin: true
     peerDependencies:
-      '@types/node': ^20.19.0 || >=22.12.0
+      '@types/node': 24.9.1
       jiti: '>=1.21.0'
       less: ^4.0.0
       lightningcss: ^1.21.0
@@ -4141,6 +4203,11 @@ snapshots:
       '@types/express-serve-static-core': 5.1.0
       '@types/serve-static': 1.15.10
 
+  '@types/fs-extra@11.0.4':
+    dependencies:
+      '@types/jsonfile': 6.1.4
+      '@types/node': 24.9.1
+
   '@types/http-errors@2.0.5': {}
 
   '@types/http-proxy@1.17.17':
@@ -4151,27 +4218,19 @@ snapshots:
 
   '@types/json-schema@7.0.15': {}
 
+  '@types/jsonfile@6.1.4':
+    dependencies:
+      '@types/node': 24.9.1
+
   '@types/mime@1.3.5': {}
 
   '@types/node-forge@1.3.14':
     dependencies:
       '@types/node': 24.9.1
 
-  '@types/node@22.18.11':
-    dependencies:
-      undici-types: 6.21.0
-
-  '@types/node@24.9.0':
-    dependencies:
-      undici-types: 7.16.0
-
   '@types/node@24.9.1':
     dependencies:
       undici-types: 7.16.0
-
-  '@types/node@26.0.1':
-    dependencies:
-      undici-types: 8.3.0
 
   '@types/qs@6.14.0': {}
 
@@ -5571,7 +5630,7 @@ snapshots:
 
   jest-worker@27.5.1:
     dependencies:
-      '@types/node': 26.0.1
+      '@types/node': 24.9.1
       merge-stream: 2.0.0
       supports-color: 8.1.1
     optional: true
@@ -6448,11 +6507,7 @@ snapshots:
 
   ufo@1.6.1: {}
 
-  undici-types@6.21.0: {}
-
   undici-types@7.16.0: {}
-
-  undici-types@8.3.0: {}
 
   unicorn-magic@0.3.0: {}
 
@@ -6484,15 +6539,15 @@ snapshots:
 
   vary@1.1.2: {}
 
-  vite-plugin-static-copy@3.1.6(vite@7.3.1(@types/node@26.0.1)(jiti@2.6.1)(terser@5.44.1)(yaml@2.8.1)):
+  vite-plugin-static-copy@3.1.6(vite@7.3.1(@types/node@24.9.1)(jiti@2.6.1)(terser@5.44.1)(yaml@2.8.1)):
     dependencies:
       chokidar: 3.6.0
       p-map: 7.0.4
       picocolors: 1.1.1
       tinyglobby: 0.2.15
-      vite: 7.3.1(@types/node@26.0.1)(jiti@2.6.1)(terser@5.44.1)(yaml@2.8.1)
+      vite: 7.3.1(@types/node@24.9.1)(jiti@2.6.1)(terser@5.44.1)(yaml@2.8.1)
 
-  vite@7.3.0(@types/node@26.0.1)(jiti@2.6.1)(terser@5.44.1)(yaml@2.8.1):
+  vite@7.3.0(@types/node@24.9.1)(jiti@2.6.1)(terser@5.44.1)(yaml@2.8.1):
     dependencies:
       esbuild: 0.27.2
       fdir: 6.5.0(picomatch@4.0.3)
@@ -6501,13 +6556,13 @@ snapshots:
       rollup: 4.52.5
       tinyglobby: 0.2.15
     optionalDependencies:
-      '@types/node': 26.0.1
+      '@types/node': 24.9.1
       fsevents: 2.3.3
       jiti: 2.6.1
       terser: 5.44.1
       yaml: 2.8.1
 
-  vite@7.3.1(@types/node@26.0.1)(jiti@2.6.1)(terser@5.44.1)(yaml@2.8.1):
+  vite@7.3.1(@types/node@24.9.1)(jiti@2.6.1)(terser@5.44.1)(yaml@2.8.1):
     dependencies:
       esbuild: 0.27.2
       fdir: 6.5.0(picomatch@4.0.3)
@@ -6516,7 +6571,7 @@ snapshots:
       rollup: 4.52.5
       tinyglobby: 0.2.15
     optionalDependencies:
-      '@types/node': 26.0.1
+      '@types/node': 24.9.1
       fsevents: 2.3.3
       jiti: 2.6.1
       terser: 5.44.1

@@ -8,7 +8,7 @@ import {
 	ScramjetHeaders,
 	type ScramjetFetchRequest,
 } from "@mercuryworkshop/scramjet";
-import { cachePlugin, controller } from "..";
+import { controller } from "..";
 import Monaco from "../components/Monaco";
 
 const DEFAULT_ORIGIN = "https://fakeorigin.com";
@@ -418,7 +418,7 @@ const PlaygroundView: Component<
 		if (path.endsWith(".js") || path.endsWith(".mjs")) return "script";
 		if (path.endsWith(".css")) return "style";
 		if (path.endsWith(".html")) return "document";
-		return "empty";
+		return "";
 	};
 
 	const isScriptFile = (path: string) =>

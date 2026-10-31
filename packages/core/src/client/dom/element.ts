@@ -650,7 +650,7 @@ export default function (client: ScramjetClient, self: typeof window) {
 	client.Proxy("Text.prototype.appendData", {
 		apply(ctx) {
 			const text = String(ctx.args[0]);
-			const parent = client.natives.call(
+			const parent = client.descriptors.get(
 				"Node.prototype.parentElement",
 				ctx.this
 			);
@@ -661,7 +661,7 @@ export default function (client: ScramjetClient, self: typeof window) {
 	client.Proxy("Text.prototype.insertData", {
 		apply(ctx) {
 			const text = String(ctx.args[1]);
-			const parent = client.natives.call(
+			const parent = client.descriptors.get(
 				"Node.prototype.parentElement",
 				ctx.this
 			);
@@ -672,7 +672,7 @@ export default function (client: ScramjetClient, self: typeof window) {
 	client.Proxy("Text.prototype.replaceData", {
 		apply(ctx) {
 			const text = String(ctx.args[2]);
-			const parent = client.natives.call(
+			const parent = client.descriptors.get(
 				"Node.prototype.parentElement",
 				ctx.this
 			);
@@ -682,7 +682,7 @@ export default function (client: ScramjetClient, self: typeof window) {
 
 	client.Trap("Text.prototype.wholeText", {
 		get(ctx) {
-			const parent = client.natives.call(
+			const parent = client.descriptors.get(
 				"Node.prototype.parentElement",
 				ctx.this
 			);
@@ -690,7 +690,7 @@ export default function (client: ScramjetClient, self: typeof window) {
 		},
 		set(ctx, v) {
 			const text = String(v);
-			const parent = client.natives.call(
+			const parent = client.descriptors.get(
 				"Node.prototype.parentElement",
 				ctx.this
 			);
@@ -721,7 +721,7 @@ export default function (client: ScramjetClient, self: typeof window) {
 				try {
 					if (!(SCRAMJETCLIENT in realwin)) {
 						// hook the iframe before the client can start to steal globals out of it
-						client.init.hookSubcontext(realwin, ctx.this);
+						client.init.hookSubcontext(realwin as Self, ctx.this);
 					}
 				} catch {
 					// cross-origin iframe, can't do anything here
@@ -749,7 +749,7 @@ export default function (client: ScramjetClient, self: typeof window) {
 				if (!realwin) return realwin;
 
 				if (!(SCRAMJETCLIENT in realwin)) {
-					client.init.hookSubcontext(realwin, ctx.this);
+					client.init.hookSubcontext(realwin as Self, ctx.this);
 				}
 
 				return realwin.document;
@@ -768,7 +768,9 @@ export default function (client: ScramjetClient, self: typeof window) {
 				const doc = ctx.call();
 				if (doc) {
 					// we trap the contentDocument, this is really the scramjet version
-					return ctx.return(ctx.this.contentDocument);
+					return ctx.return(
+						"contentDocument" in ctx.this ? ctx.this.contentDocument : doc
+					);
 				}
 			},
 		}

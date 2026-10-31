@@ -6,6 +6,14 @@ inputs:
     description: "Version of wasm-bindgen-cli to install"
     required: false
     default: "0.2.105"
+  wasm-snip-revision:
+    description: "Pinned wasm-snip Git commit"
+    required: false
+    default: "e9c9e133f15f3b9849704c653b87cb12067e629f"
+  binaryen-version:
+    description: "Pinned Binaryen release version"
+    required: false
+    default: "133"
   rewriter-path:
     description: "Path to the rewriter directory for Rust cache"
     required: true
@@ -23,11 +31,15 @@ runs:
         cache-all-crates: true
         shared-key: "rewriter"
 
+    - name: Install pinned Rust toolchain
+      shell: bash
+      run: rustup toolchain install nightly-2026-10-31 --profile minimal --component rust-src --target wasm32-unknown-unknown
+
     - name: Cache cargo bin tools
       uses: actions/cache@v4
       with:
         path: ~/.cargo/bin
-        key: cargo-bin-${{ runner.os }}-wbg${{ inputs.wasm-bindgen-version }}-wasm-snip
+        key: cargo-bin-${{ runner.os }}-wbg${{ inputs.wasm-bindgen-version }}-wasm-snip-${{ inputs.wasm-snip-revision }}
         restore-keys: |
           cargo-bin-${{ runner.os }}-
 
@@ -35,17 +47,16 @@ runs:
       shell: bash
       run: |
         if ! command -v wasm-bindgen &> /dev/null || ! [[ "$(wasm-bindgen -V)" =~ ^"wasm-bindgen ${{ inputs.wasm-bindgen-version }}" ]]; then
-          cargo install wasm-bindgen-cli --version ${{ inputs.wasm-bindgen-version }}
+          cargo install wasm-bindgen-cli --version ${{ inputs.wasm-bindgen-version }} --locked --force
         fi
 
     - name: Setup Binaryen
       uses: Aandreba/setup-binaryen@v1.0.0
       with:
         token: ${{ inputs.github-token }}
+        version: ${{ inputs.binaryen-version }}
 
     - name: Setup wasm-snip
       shell: bash
       run: |
-        if ! command -v wasm-snip &> /dev/null; then
-          cargo install --git https://github.com/r58playz/wasm-snip
-        fi
+        cargo install --git https://github.com/r58playz/wasm-snip --rev ${{ inputs.wasm-snip-revision }} --locked --force

@@ -57,7 +57,7 @@ function asParsed(mime: string | ParsedMimeType): ParsedMimeType | null {
 	return typeof mime === "string" ? parseMimeType(mime) : mime;
 }
 
-const FONT_ESSENCES = new _Set([
+const FONT_ESSENCES = new _Set<string>([
 	"application/font-cff",
 	"application/font-otf",
 	"application/font-sfnt",
@@ -67,13 +67,13 @@ const FONT_ESSENCES = new _Set([
 	"application/vnd.ms-opentype",
 ]);
 
-const ARCHIVE_ESSENCES = new _Set([
+const ARCHIVE_ESSENCES = new _Set<string>([
 	"application/x-rar-compressed",
 	"application/zip",
 	"application/x-gzip",
 ]);
 
-const JAVASCRIPT_ESSENCES = new _Set([
+const JAVASCRIPT_ESSENCES = new _Set<string>([
 	"application/ecmascript",
 	"application/javascript",
 	"application/x-ecmascript",

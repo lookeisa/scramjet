@@ -22,10 +22,15 @@ if [ -f out/.build-hash ] && [ -f ../../dist/scramjet.wasm ] && [ "$SRC_HASH" !=
   exit 0
 fi
 
-which cargo wasm-bindgen wasm-opt wasm-snip &> /dev/null || {
-	echo "Please install cargo, wasm-bindgen, wasm-opt from https://github.com/WebAssembly/binaryen, and wasm-snip from https://github.com/r58playz/wasm-snip!"
+which cargo wasm-bindgen wasm-snip &> /dev/null || {
+	echo "Please install cargo, wasm-bindgen, and wasm-snip from the documented RefractJS toolchain."
 	exit 1
 }
+
+if [ "${RELEASE:-0}" = "1" ] && ! command -v wasm-opt &> /dev/null; then
+	echo "Release builds require wasm-opt from the pinned Binaryen release."
+	exit 1
+fi
 
 WBG="wasm-bindgen 0.2.105"
 if ! [[ "$(wasm-bindgen -V)" =~ ^"$WBG" ]]; then
@@ -42,7 +47,7 @@ fi
 	if [ "${OPTIMIZE_FOR_SPEED:-0}" = "0" ]; then
 		STD_FEATURES="${STD_FEATURES},optimize_for_size"
 	fi
-	cargo +nightly build --release --target wasm32-unknown-unknown \
+	cargo build --release --target wasm32-unknown-unknown \
 		-Z build-std=panic_abort,std -Z build-std-features=${STD_FEATURES} \
 		--no-default-features --features "$FEATURES"
 )

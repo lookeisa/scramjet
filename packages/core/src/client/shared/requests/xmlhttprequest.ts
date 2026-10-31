@@ -1,6 +1,6 @@
-import { getFlag, ScramjetContext } from "@/shared";
 import { rewriteUrl, unrewriteUrl, URLMeta } from "@rewriters/url";
 import { ScramjetClient } from "@client/index";
+import type { ScramjetContext } from "@/shared";
 
 export default function (client: ScramjetClient, self: Self) {
 	let worker;
@@ -30,7 +30,7 @@ export default function (client: ScramjetClient, self: Self) {
 			const args = ctx.this[ARGS];
 			if (!args || args[2]) return;
 
-			if (!client.getFlag("syncxhr")) {
+			if (!client.flagEnabled("syncxhr")) {
 				console.warn("ignoring request - sync xhr disabled in flags");
 
 				return ctx.return(undefined);

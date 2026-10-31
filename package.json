@@ -1,16 +1,25 @@
 {
-	"name": "scramjet-root",
+	"name": "refractjs-monorepo",
 	"version": "1.0.0",
-	"description": "",
+	"description": "Independent web-request engine under active development",
 	"type": "module",
 	"keywords": [],
-	"author": "Mercury Workshop",
+	"author": "RefractJS contributors",
 	"license": "AGPL-3.0-only",
 	"packageManager": "pnpm@10.12.1",
 	"scripts": {
 		"dev": "node --no-warnings=ExperimentalWarning devserver.ts",
 		"dev:debug": "DEBUG=1 node --no-warnings=ExperimentalWarning devserver.ts",
 		"test:package": "ava tests/ci/packageValidation.js",
+		"refract:build": "pnpm exec tsc --project packages/refract-shared/tsconfig.build.json && pnpm exec tsc --project packages/refract-transports/tsconfig.build.json && pnpm exec tsc --project packages/refract-rewriter/tsconfig.build.json && pnpm exec tsc --project packages/refract-transport-fetch/tsconfig.build.json && pnpm exec tsc --project packages/refract-core/tsconfig.build.json",
+		"refract:test:run": "node --experimental-strip-types --test packages/refract-core/test/*.test.ts",
+		"refract:check:run": "pnpm exec tsc --noEmit -p packages/refract-shared/tsconfig.json && pnpm exec tsc --noEmit -p packages/refract-transports/tsconfig.json && pnpm exec tsc --noEmit -p packages/refract-rewriter/tsconfig.json && pnpm exec tsc --noEmit -p packages/refract-transport-fetch/tsconfig.json && pnpm exec tsc --noEmit -p packages/refract-core/tsconfig.json",
+		"refract:test": "pnpm run refract:build && pnpm run refract:test:run",
+		"refract:check": "pnpm run refract:build && pnpm run refract:check:run",
+		"refract": "pnpm run refract:build && pnpm run refract:test:run && pnpm run refract:check:run",
+		"legacy:build": "pnpm --filter @mercuryworkshop/scramjet build && pnpm --filter create-proxy-app build && pnpm --filter @mercuryworkshop/scramjet-controller build && pnpm --filter @mercuryworkshop/proxy-bootstrap build && pnpm --filter @mercuryworkshop/scramjet-utils build && pnpm --filter @mercuryworkshop/scramjet-demo build",
+		"legacy:types": "node scripts/check-workspace-types.mjs --legacy",
+		"verify:workspace": "pnpm refract && pnpm legacy:build && pnpm test:package && pnpm legacy:types",
 		"preinstall": "npx only-allow pnpm"
 	},
 	"ava": {
@@ -20,6 +29,9 @@
 		"verbose": true
 	},
 	"devDependencies": {
+		"@types/node": "^24.3.1",
+		"@rsdoctor/types": "1.4.0",
+		"@rsdoctor/types": "1.4.0",
 		"@rspack/cli": "^1.5.8",
 		"@rspack/core": "^1.5.8",
 		"@fastify/deepmerge": "^3.2.1",
@@ -32,7 +44,8 @@
 		"eslint": "^10.2.0",
 		"vite": "^7.3.0",
 		"ava": "^6.4.1",
-		"glob": "^13.0.6"
+		"glob": "^13.0.6",
+		"typescript": "^5.9.3"
 	},
 	"dependencies": {
 		"prettier": "^3.6.2"

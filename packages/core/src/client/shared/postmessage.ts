@@ -14,12 +14,19 @@ export default function (client: ScramjetClient, self: Self) {
 				// and this works in every case EXCEPT for the fact that all three arguments can be strings which are copied instead of cloned
 				// so we have to use `$setrealm` which will pollute this with an object from the real realm
 
+				type WindowPostMessageArgs = [
+					message: unknown,
+					targetOrigin?: string | WindowPostMessageOptions,
+					transfer?: Transferable[],
+				];
+				const args = ctx.args as unknown as WindowPostMessageArgs;
+
 				let pollutant;
 
-				if (typeof ctx.args[0] === "object" && ctx.args[0] !== null) {
-					pollutant = ctx.args[0]; // try to use the first object we can find because it's more reliable
-				} else if (typeof ctx.args[2] === "object" && ctx.args[2] !== null) {
-					pollutant = ctx.args[2]; // next try to use transfer
+				if (typeof args[0] === "object" && args[0] !== null) {
+					pollutant = args[0]; // try to use the first object we can find because it's more reliable
+				} else if (typeof args[2] === "object" && args[2] !== null) {
+					pollutant = args[2]; // next try to use transfer
 				} else if (
 					ctx.this &&
 					POLLUTANT in ctx.this &&
@@ -34,7 +41,9 @@ export default function (client: ScramjetClient, self: Self) {
 				// and now we can steal Function from the caller's realm
 				const {
 					constructor: { constructor: Function },
-				} = pollutant;
+				} = pollutant as {
+					constructor: { constructor: FunctionConstructor };
+				};
 
 				// invoking stolen function will give us the caller's globalThis, remember scramjet has already proxied it!!!
 				const callerGlobalThisProxied: Self = Function("return globalThis")();
@@ -55,21 +64,23 @@ export default function (client: ScramjetClient, self: Self) {
 				const inherit =
 					callerClient.url.href === "about:srcdoc" ||
 					callerClient.url.href === "about:blank";
-				ctx.args[0] = {
+				args[0] = {
 					$scramjet$messagetype: "window",
 					$scramjet$origin: inherit
 						? callerClient.global.parent[SCRAMJETCLIENT].url.origin
 						: callerClient.url.origin,
-					$scramjet$data: ctx.args[0],
+					$scramjet$data: args[0],
 				};
 				// console.error("?", ctx.args);
 				// eval("debugger");
 
 				// * origin because obviously
-				if (typeof ctx.args[1] === "string") ctx.args[1] = "*";
-				if (typeof ctx.args[1] === "object") ctx.args[1].targetOrigin = "*";
+				if (typeof args[1] === "string") args[1] = "*";
+				if (typeof args[1] === "object" && args[1] !== null) {
+					args[1].targetOrigin = "*";
+				}
 
-				ctx.return(wrappedPostMessage.call(ctx.fn, ...ctx.args));
+				ctx.return(wrappedPostMessage.call(ctx.fn, ...args));
 			},
 		});
 

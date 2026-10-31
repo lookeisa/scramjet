@@ -193,7 +193,7 @@ export function load(init: Init) {
 		});
 		return;
 	}
-	if (!("WASM" in self)) {
+	if (!("WASM" in self) || typeof self.WASM !== "string") {
 		throw new Error("WASM not found in global scope!");
 	}
 	const wasm = Uint8Array.from(atob(self.WASM), (c) => c.charCodeAt(0));
@@ -299,7 +299,11 @@ class ExecutionContextWrapper {
 			isTopLevel = false;
 			let currentwin = this.global.window;
 			while (currentwin.parent !== currentwin) {
-				const currentclient = currentwin[SCRAMJETCLIENT];
+				const currentclient = (
+					currentwin as unknown as Partial<
+						Record<typeof SCRAMJETCLIENT, ScramjetClient>
+					>
+				)[SCRAMJETCLIENT];
 				if (!currentclient) {
 					currentwin = currentwin.parent.window;
 					continue;

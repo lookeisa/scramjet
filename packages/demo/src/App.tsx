@@ -1,5 +1,4 @@
-import { css, createDelegate, type Component } from "dreamland/core";
-import type { Frame } from "@mercuryworkshop/scramjet-controller";
+import { css, type Component } from "dreamland/core";
 import FlagEditor from "./components/FlagEditor";
 import BrowserView from "./pages/BrowserView";
 import RequestViewer from "./pages/RequestViewer";

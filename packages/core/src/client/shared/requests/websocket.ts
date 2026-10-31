@@ -1,4 +1,7 @@
-import { type BareCompatibleWebSocket } from "@mercuryworkshop/proxy-transports";
+import {
+	type BareCompatibleWebSocket,
+	type WebSocketDataType,
+} from "@mercuryworkshop/proxy-transports";
 import { ScramjetClient } from "@client/index";
 import {
 	Object_setPrototypeOf,
@@ -11,7 +14,7 @@ type FakeWebSocketState = {
 	protocol: string;
 	extensions: string;
 	url: string;
-	binaryType: string;
+	binaryType: BinaryType;
 	barews: BareCompatibleWebSocket;
 
 	onopen: (ev: Event) => any | null;
@@ -25,11 +28,23 @@ type FakeWebSocketStreamState = {
 	url: string;
 	barews: BareCompatibleWebSocket;
 
-	opened: any;
-	closed: any;
-	readable: ReadableStream;
-	writable: WritableStream;
+	opened: Promise<WebSocketStreamOpenedInfo>;
+	closed: Promise<WebSocketStreamClosedInfo>;
+	readable: ReadableStream<WebSocketDataType>;
+	writable: WritableStream<string | ArrayBuffer | Blob | ArrayBufferView<ArrayBufferLike>>;
 };
+
+function toWebSocketData(
+	data: string | ArrayBuffer | Blob | ArrayBufferView<ArrayBufferLike>
+): WebSocketDataType {
+	if (typeof data === "string" || data instanceof ArrayBuffer || data instanceof Blob) {
+		return data;
+	}
+	const source = new Uint8Array(data.buffer, data.byteOffset, data.byteLength);
+	const copy = new ArrayBuffer(source.byteLength);
+	new Uint8Array(copy).set(source);
+	return copy;
+}
 export default function (client: ScramjetClient, self: GlobalThis) {
 	const socketmap: WeakMap<WebSocket, FakeWebSocketState> =
 		new _WeakMap() as WeakMap<WebSocket, FakeWebSocketState>;
@@ -137,7 +152,7 @@ export default function (client: ScramjetClient, self: GlobalThis) {
 
 			return ws.binaryType;
 		},
-		set(ctx, v: string) {
+		set(ctx, v: BinaryType) {
 			const ws = socketmap.get(ctx.this);
 			if (!ws) return ctx.set(v);
 			if (v === "blob" || v === "arraybuffer") ws.binaryType = v;
@@ -254,7 +269,8 @@ export default function (client: ScramjetClient, self: GlobalThis) {
 			const ws = socketmap.get(ctx.this);
 			if (!ws) return;
 
-			ctx.return(ws.barews.send(ctx.args[0]));
+			void ws.barews.send(toWebSocketData(ctx.args[0]));
+			ctx.return(undefined);
 		},
 	});
 
@@ -275,7 +291,7 @@ export default function (client: ScramjetClient, self: GlobalThis) {
 			Object_setPrototypeOf(fakeWebSocket, ctx.fn.prototype);
 			fakeWebSocket.constructor = ctx.fn;
 
-			const barews = client.bare.createWebSocket(ctx.args[0], ctx.args[1], [
+			const barews = client.bare.createWebSocket(ctx.args[0], ctx.args[1]?.protocols, [
 				["User-Agent", self.navigator.userAgent],
 				["Origin", client.url.origin],
 			]);
@@ -285,10 +301,10 @@ export default function (client: ScramjetClient, self: GlobalThis) {
 			const state: FakeWebSocketStreamState = {
 				protocol: "",
 				extensions: "",
-				url: ctx.args[0],
+				url: String(ctx.args[0]),
 				barews,
 
-				opened: new Promise((resolve, reject) => {
+				opened: new Promise<WebSocketStreamOpenedInfo>((resolve, reject) => {
 					barews.addEventListener("open", () => {
 						resolve({
 							readable: state.readable,
@@ -301,12 +317,12 @@ export default function (client: ScramjetClient, self: GlobalThis) {
 						reject(ev);
 					});
 				}),
-				closed: new Promise((resolve) => {
+				closed: new Promise<WebSocketStreamClosedInfo>((resolve) => {
 					barews.addEventListener("close", (ev: CloseEvent) => {
 						resolve({ closeCode: ev.code, reason: ev.reason });
 					});
 				}),
-				readable: new ReadableStream({
+				readable: new ReadableStream<WebSocketDataType>({
 					start(controller) {
 						barews.addEventListener("message", async (ev: MessageEvent) => {
 							let payload = ev.data;
@@ -329,15 +345,17 @@ export default function (client: ScramjetClient, self: GlobalThis) {
 						barews.close(info?.closeCode ?? 1000, info?.reason ?? "");
 					},
 				}),
-				writable: new WritableStream({
+				writable: new WritableStream<
+					string | ArrayBuffer | Blob | ArrayBufferView<ArrayBufferLike>
+				>({
 					write(chunk) {
-						barews.send(chunk);
+						return barews.send(toWebSocketData(chunk));
 					},
 					abort() {
 						barews.close(1000, "");
 					},
-					close(info) {
-						barews.close(info?.closeCode ?? 1000, info?.reason ?? "");
+					close() {
+						barews.close(1000, "");
 					},
 				}),
 			};

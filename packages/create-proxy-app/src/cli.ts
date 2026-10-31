@@ -206,14 +206,14 @@ async function project() {
 	switch (installDeps.install || cliResults.flags.install) {
 		case true:
 			prompt.note(
-				`cd ${initial.path ?? providedName} \n${packageManager} run dev`,
+				`cd ${initial.path ?? cliResults.dir} \n${packageManager} run dev`,
 				chalk.bold.magenta("Done creating. Now run:")
 			);
 			break;
 		case false:
 			prompt.note(
 				`cd ${
-					initial.path ?? providedName
+					initial.path ?? cliResults.dir
 				} \n${packageManager} install \n${packageManager} run dev`,
 				chalk.bold.magenta("Done creating. Now run:")
 			);
@@ -224,7 +224,7 @@ async function project() {
 		spinner.start();
 		spinner.message(chalk.yellow("Scaffolding project..."));
 		await scaffold({
-			projectName: initial.path ?? providedName,
+			projectName: initial.path ?? cliResults.dir,
 			scaffoldType: initial.type,
 		});
 		spinner.stop(chalk.bold.green("Scaffold complete!"));

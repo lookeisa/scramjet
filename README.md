@@ -1,62 +1,47 @@
-<h1 align="center">Scramjet</h1>
-<div align="center">
-  <img src="assets/scramjet.png" height="200" />
-</div>
+# RefractJS
 
-<div align="center">
-  <a href="https://www.npmjs.com/package/@mercuryworkshop/scramjet"><img src="https://img.shields.io/npm/v/@mercuryworkshop/scramjet.svg?maxAge=3600" alt="npm version" /></a>
-  <img src="https://img.shields.io/github/issues/MercuryWorkshop/scramjet?style=flat&color=orange" />
-  <img src="https://img.shields.io/github/stars/MercuryWorkshop/scramjet?style=flat&color=orange" />
-</div>
+RefractJS is an independent web-request engine under active development. Its current working path is a Node.js HTTP Fetch transport guarded by an explicit origin allowlist, a bounded fair scheduler, and a bounded in-memory HTTP response cache.
 
----
+The repository still contains the original Scramjet application and runtime as a quarantined legacy system. The existing `pnpm dev` workflow continues to run that application; it does not start RefractJS. See [REFRACT_ARCHITECTURE.md](REFRACT_ARCHITECTURE.md) and [LICENSE_INVENTORY.md](LICENSE_INVENTORY.md) before distributing or deploying any part of this repository.
 
-Scramjet is an experimental interception-based web proxy designed to evade internet censorship and bypass arbitrary browser restrictions.<br><br>
-Scramjet allows you to sandbox arbitrary web content, bypass CORS restrictions on loading websites, and instrument and debug websites inside the browser itself. This is accomplished through a combination of interception, rewriting, and sandboxing techniques. You can learn more about the technical details <a href="https://developer.puter.com/blog/how-I-ported-the-web-to-the-web/"><strong>here</strong></a>.<br><br>
+## Current RefractJS Commands
 
-<div align="center">
- <a href="https://github.com/MercuryWorkshop/scramjet/wiki">Documentation</a> | <a href="https://scramjet.mercurywork.shop">Playground</a> | <a href="https://discord.gg/tmApqGqfX2">Discord</a>
-</div>
+```sh
+pnpm install
+pnpm refract:test
+pnpm refract:check
+pnpm refract
+```
 
-## Supported Sites
+The request integration test starts a local HTTP fixture and explicitly allowlists its loopback origin. The default RefractJS configuration has an empty allowlist and denies requests until an application supplies one.
 
-Some of the popular websites that Scramjet supports include:
+## Current Scope
 
-- [Google](https://google.com)
-- [Youtube](https://youtube.com)
-- [Instagram](https://instagram.com)
-- [ChatGPT](https://chatgpt.com)
-- [Reddit](https://reddit.com)
-- [Twitter](https://twitter.com)
-- [Discord](https://discord.com)
-- [Spotify](https://spotify.com)
-- [GeForce NOW](https://play.geforcenow.com/)
-- [now.gg](https://now.gg)
+- `@refractjs/refract-shared` provides request, response, configuration, and standardized error contracts.
+- `@refractjs/refract-transports` provides the transport lifecycle contract and metrics.
+- `@refractjs/refract-transport-fetch` makes real HTTP requests through the platform Fetch API, enforces an exact origin allowlist, disables automatic redirects, and applies request/response byte limits.
+- `@refractjs/refract-rewriter` currently resolves absolute and relative HTTP(S) URLs. HTML, CSS, and JavaScript rewriting are not implemented and are disabled by default.
+- `@refractjs/refract-core` runs requests through URL resolution, a bounded per-origin scheduler, memory caching, and the configured transport.
+
+This is not yet a browser proxy or a replacement for the existing application. It has no gateway, service worker, browser controller, or production-ready DNS-rebinding protection. Do not expose it as a public relay.
+
+## Brand
+
+| Token | Color |
+| --- | --- |
+| Primary blue | `#38BDF8` |
+| Secondary violet | `#8B5CF6` |
+| Background | `#090D18` |
+| Surface | `#101827` |
+| Text | `#F8FAFC` |
+| Muted text | `#94A3B8` |
+
+The geometric prism concept is a future identity direction; the legacy demo is intentionally unchanged.
 
 ## Development
 
-### Dependencies
+See [DEVELOPMENT.md](DEVELOPMENT.md) for the verified Rust/WASM toolchain, build order, and separate Refract, legacy, and full-workspace gates.
 
-- Recent versions of `node.js` and `pnpm`
-- `rustup`
-- `wasm-bindgen`
-- [Binaryen's `wasm-opt`](https://github.com/WebAssembly/binaryen)
-- [this `wasm-snip` fork](https://github.com/r58Playz/wasm-snip)
+## Licensing
 
-#### Building
-
-- Clone the repository with `git clone --recursive https://github.com/MercuryWorkshop/scramjet`
-- Install the dependencies with `pnpm i`
-- Change directories with `cd packages/core`
-- Build the rewriter with `pnpm rewriter:build`
-- Build Scramjet with `pnpm build`
-
-### Running Scramjet Locally
-
-You can run the Scramjet dev server when running this command at the root
-
-```sh
-pnpm dev
-```
-
-The demo page for scramjet should now be running at <http://localhost:4141> and should rebuild upon a file being changed (excluding the rewriter).
+The root project metadata remains `AGPL-3.0-only` because this checkout contains AGPL-covered upstream Scramjet components. See [LICENSE_INVENTORY.md](LICENSE_INVENTORY.md) for the retained packages and obligations. RefractJS has not been relicensed independently.

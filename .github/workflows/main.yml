@@ -175,6 +175,8 @@ jobs:
         uses: ./.github/actions/setup-rewriter-toolchain
         with:
           wasm-bindgen-version: ${{ env.WASM_BINDGEN_VERSION }}
+          binaryen-version: "133"
+          wasm-snip-revision: "e9c9e133f15f3b9849704c653b87cb12067e629f"
           rewriter-path: packages/core/rewriter
           github-token: ${{ github.token }}
 

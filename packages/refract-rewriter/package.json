@@ -1,0 +1,21 @@
+{
+  "name": "@refractjs/refract-rewriter",
+  "version": "0.1.0",
+  "license": "AGPL-3.0-only",
+  "type": "module",
+  "private": true,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "dependencies": {
+    "@refractjs/refract-shared": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^24.3.1"
+  }
+}

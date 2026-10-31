@@ -98,7 +98,7 @@ export default function (client: ScramjetClient) {
 				},
 			});
 		},
-		set(ctx, value: string) {
+		set(ctx, value: CSSStyleDeclaration) {
 			// this will actually run the trap for cssText. don't rewrite it here
 			ctx.set(value);
 		},
