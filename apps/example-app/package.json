@@ -1,0 +1,20 @@
+{
+  "name": "@fractal/example-app",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node --experimental-strip-types src/server.ts",
+    "typecheck": "tsc --noEmit --project tsconfig.json",
+    "test": "node --experimental-strip-types --test ./tests/*.test.ts"
+  },
+  "dependencies": {
+    "@refractjs/refract-core": "workspace:*",
+    "@refractjs/refract-transport-fetch": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^24.3.1",
+    "playwright": "^1.61.0",
+    "typescript": "^5.9.3"
+  }
+}

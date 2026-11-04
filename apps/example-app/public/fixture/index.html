@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Fractal Local Fixture</title>
+    <link rel="stylesheet" href="./fixture.css" />
+    <script src="./fixture.js" defer></script>
+  </head>
+  <body>
+    <main class="fixture-page">
+      <p class="eyebrow">CONTROLLED LOCAL ORIGIN</p>
+      <h1 id="fixture-title" data-testid="fixture-title">
+        A real response through Fractal
+      </h1>
+      <p class="intro">
+        This document, its stylesheet, script, image, and JSON request are
+        served by the local fixture and fetched through Fractal Core.
+      </p>
+      <div class="fixture-row">
+        <img
+          src="./fixture.svg"
+          width="84"
+          height="84"
+          alt="A geometric green mark"
+        />
+        <div>
+          <button id="count-button" type="button">
+            Click count: <span id="click-count">0</span>
+          </button>
+          <p id="fixture-data" role="status">
+            Waiting for the local JSON response...
+          </p>
+        </div>
+      </div>
+      <a data-fractal-navigate href="./next.html"
+        >Go to the next fixture page</a
+      >
+    </main>
+  </body>
+</html>

@@ -17,9 +17,13 @@
 		"refract:test": "pnpm run refract:build && pnpm run refract:test:run",
 		"refract:check": "pnpm run refract:build && pnpm run refract:check:run",
 		"refract": "pnpm run refract:build && pnpm run refract:test:run && pnpm run refract:check:run",
-		"legacy:build": "pnpm --filter @mercuryworkshop/scramjet build && pnpm --filter create-proxy-app build && pnpm --filter @mercuryworkshop/scramjet-controller build && pnpm --filter @mercuryworkshop/proxy-bootstrap build && pnpm --filter @mercuryworkshop/scramjet-utils build && pnpm --filter @mercuryworkshop/scramjet-demo build",
+		"example": "pnpm refract:build && pnpm --filter @fractal/example-app start",
+		"example:check": "pnpm refract:build && pnpm --filter @fractal/example-app typecheck",
+		"example:test": "pnpm refract:build && pnpm --filter @fractal/example-app test",
+		"legacy:build": "pnpm --filter @mercuryworkshop/scramjet run rewriter:build && pnpm --filter @mercuryworkshop/scramjet build && pnpm --filter create-proxy-app build && pnpm --filter @mercuryworkshop/scramjet-controller build && pnpm --filter @mercuryworkshop/proxy-bootstrap build && pnpm --filter @mercuryworkshop/scramjet-utils build && pnpm --filter @mercuryworkshop/scramjet-demo build",
 		"legacy:types": "node scripts/check-workspace-types.mjs --legacy",
-		"verify:workspace": "pnpm refract && pnpm legacy:build && pnpm test:package && pnpm legacy:types",
+		"verify:workspace": "pnpm refract && pnpm --filter @fractal/example-app typecheck && pnpm --filter @fractal/example-app test && pnpm legacy:build && pnpm test:package && pnpm legacy:types",
+		"verify": "pnpm verify:workspace",
 		"preinstall": "npx only-allow pnpm"
 	},
 	"ava": {

@@ -1,0 +1,75 @@
+:root {
+  font-family: Georgia, "Times New Roman", serif;
+  color: #17362b;
+  background: #f2f5ee;
+}
+
+body {
+  margin: 0;
+}
+
+.fixture-page {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: clamp(24px, 7vw, 72px) 28px;
+}
+
+.eyebrow {
+  color: #477e65;
+  font:
+    700 11px/1.2 ui-sans-serif,
+    system-ui,
+    sans-serif;
+  letter-spacing: 0.08em;
+}
+
+h1 {
+  max-width: 600px;
+  margin: 18px 0 12px;
+  font-size: clamp(32px, 6vw, 54px);
+  line-height: 1.04;
+}
+
+.intro {
+  max-width: 570px;
+  color: #52665a;
+  font-size: 17px;
+  line-height: 1.55;
+}
+
+.fixture-row {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  margin: 34px 0;
+  padding: 20px;
+  border: 1px solid #cad7cc;
+  background: #fbfcf9;
+}
+
+.fixture-row img {
+  flex: 0 0 84px;
+}
+
+button {
+  padding: 9px 13px;
+  border: 1px solid #2d7654;
+  border-radius: 3px;
+  background: #dceddf;
+  color: #17362b;
+  cursor: pointer;
+}
+
+#fixture-data {
+  margin-bottom: 0;
+  color: #52665a;
+  font:
+    13px/1.4 ui-sans-serif,
+    system-ui,
+    sans-serif;
+}
+
+a {
+  color: #205e43;
+  text-underline-offset: 3px;
+}

@@ -4,18 +4,18 @@
 
 The toolchain below was verified on Ubuntu 24.04, x86_64, on 2026-10-31:
 
-| Tool | Version/configuration |
-| --- | --- |
-| Node.js | 24.22.2 (CI selects major version 24) |
-| pnpm | 10.12.1 (`packageManager` in the root manifest) |
-| Rust channel | `nightly-2026-10-31` |
-| rustc | 1.101.0-nightly, commit `92b5b8c87c61b20adc9001b41baf587634a74734` |
-| Cargo | 1.101.0-nightly, commit `31d3246e0` |
-| Rust components | `rust-src`; host `x86_64-unknown-linux-gnu` |
-| Rust target | `wasm32-unknown-unknown` |
-| wasm-bindgen-cli | 0.2.105 (also pinned by the Cargo lockfile and CI) |
+| Tool                | Version/configuration                                                                                |
+| ------------------- | ---------------------------------------------------------------------------------------------------- |
+| Node.js             | 24.22.2 (CI selects major version 24)                                                                |
+| pnpm                | 10.12.1 (`packageManager` in the root manifest)                                                      |
+| Rust channel        | `nightly-2026-10-31`                                                                                 |
+| rustc               | 1.101.0-nightly, commit `92b5b8c87c61b20adc9001b41baf587634a74734`                                   |
+| Cargo               | 1.101.0-nightly, commit `31d3246e0`                                                                  |
+| Rust components     | `rust-src`; host `x86_64-unknown-linux-gnu`                                                          |
+| Rust target         | `wasm32-unknown-unknown`                                                                             |
+| wasm-bindgen-cli    | 0.2.105 (checked by the build script and pinned in CI; the Rust crate is locked separately)          |
 | Binaryen / wasm-opt | 133; x86_64 Linux archive SHA-256 `2dc9c7813f5375db93d96ead4b78222fcc3e2677bbb832297af4797782a37489` |
-| wasm-snip | 0.4.0 at commit `e9c9e133f15f3b9849704c653b87cb12067e629f` |
+| wasm-snip           | 0.4.0 at commit `e9c9e133f15f3b9849704c653b87cb12067e629f`                                           |
 
 The repository previously specified only a floating `nightly` channel, Binaryen `latest`, and an unpinned wasm-snip branch. The current tool versions above were selected from the successful build and are now pinned in the toolchain file and CI setup. `wasm-opt` is required for release (`RELEASE=1`) builds; debug WASM generation does not invoke it. `cargo`, wasm-bindgen, and wasm-snip are required for both modes.
 
@@ -75,7 +75,7 @@ pnpm test:package
 
 Generated `target`, `wasm/out`, `dist`, and `lib` outputs are ignored by repository rules and were not added to Git.
 
-## Refract Gate
+## Fractal Gate
 
 The package manifests are `@refractjs/refract-core`, `@refractjs/refract-rewriter`, `@refractjs/refract-shared`, `@refractjs/refract-transports`, and `@refractjs/refract-transport-fetch`.
 
@@ -95,14 +95,31 @@ pnpm legacy:build
 pnpm test:package
 pnpm legacy:types
 pnpm verify:workspace
+pnpm verify
 ```
 
-`legacy:types` checks root and legacy package TypeScript configs, reports all diagnostics, and exits nonzero when any config fails. The current gate fails 10 configurations with 273 diagnostics (overlapping diagnostics occur in packages with multiple configs). The errors are in original Scramjet/controller/demo/scaffolder/utils/RPC and root files or their declaration dependencies; those implementation sources were not changed by the Refract work. Core declaration generation reports 20 errors in `tsconfig.types.json`, while the inherited Rspack plugin logs and swallows that compiler exit. The bundler build and package-validation gate nevertheless complete. Use `pnpm legacy:types` to distinguish a bundle build pass from a clean type declaration pass.
+`legacy:types` checks root and legacy package TypeScript configs, reports all diagnostics, and exits nonzero when any config fails. On 2026-11-04, all 11 configurations passed after correcting the current core type errors. Run this command after changes because legacy diagnostics can vary with the installed dependency and TypeScript versions.
 
-`pnpm verify:workspace` runs Refract build/tests/types, all named legacy builds, package validation, and then the legacy type gate. Until the untouched legacy type errors are resolved, this full gate is expected to return nonzero at its final step; it does not mark the repository healthy merely because Refract passes.
+`pnpm legacy:build` first runs the legacy WASM rewriter build, then builds the legacy packages. `pnpm verify:workspace` runs Fractal package builds/tests/types, the example app typecheck and integration suite, all named legacy builds, package validation, and the legacy type gate. `pnpm verify` is an alias for the full workspace gate.
+
+## Fractal Example Application
+
+The loopback-only example at `apps/example-app` exercises the Fractal Core public API and Fetch transport against its controlled local fixture. It does not provide general website proxying or HTML/JS rewriting.
+
+```sh
+pnpm example
+pnpm example:check
+pnpm example:test
+```
+
+`pnpm example` builds Fractal packages and starts the app at `http://127.0.0.1:3000` with its local fixture on port 3001. Both bind to loopback. The app allows only fixed fixture routes and revalidates every redirect; do not expose it as a public proxy. The browser test requires Playwright Chromium and its Linux system libraries; a skipped browser test is not browser compatibility evidence. The example's detailed request path and limitations are documented in `apps/example-app/README.md`.
 
 ## Verified Results and Remaining Limitations
 
-On 2026-10-31, the pinned production rewriter build generated a valid 583,584-byte `packages/core/dist/scramjet.wasm` with SHA-256 `2984ba4b66a541c4366f29a89d80560f81b284b1092ff3c6f1353b8ccf8671d1`; Binaryen parsed and re-emitted the generated module, and the distribution bytes matched `wasm/out/optimized.wasm`. `pnpm build` for Scramjet core completed, the recursive workspace build completed, and `pnpm test:package` passed 4/4 checks. Refract builds, 13 tests, and all five package typechecks passed.
+On 2026-10-31, the pinned production rewriter build generated a valid 583,584-byte `packages/core/dist/scramjet.wasm` with SHA-256 `2984ba4b66a541c4366f29a89d80560f81b284b1092ff3c6f1353b8ccf8671d1`; Binaryen parsed and re-emitted the generated module, and the distribution bytes matched `wasm/out/optimized.wasm`.
 
-The legacy declaration gate remains failing and requires separate source-level repairs. The Refract Fetch transport still does not pin DNS results, provide a gateway/session authentication layer, or implement browser document rewriting. No website compatibility or comparative performance benchmarks have been run.
+On 2026-11-04, the main worktree passed `pnpm verify` with the example app included: 13 Fractal tests, all five Fractal package typechecks, 13 example unit/integration/browser tests, 4/4 package-validation tests, legacy builds, and all 11 legacy/root type configurations. Chromium's shared libraries were missing from the container; the browser was run using libraries downloaded and extracted under `/tmp` with a command-local `LD_LIBRARY_PATH`, without system installation. The pinned Rust/WASM tools were also absent from the default `PATH`; adding them to a command-local `PATH` resolved that environment issue.
+
+A detached validation worktree at `HEAD` verified a frozen-lockfile install from an empty `node_modules` tree (690 packages), `pnpm refract` (13/13 tests), and a fresh `RELEASE=1` WASM build through Binaryen followed by the Scramjet bundle build and `pnpm test:package` (4/4). pnpm reported ignored install scripts for `bufferutil`, `core-js`, and `esbuild`; the listed builds and tests still passed. That detached worktree does not contain the main worktree's unstaged core TypeScript fixes, so its legacy type gate retains the five baseline core diagnostics; the current main worktree gate passes all 11 configurations.
+
+The Fractal Fetch transport still does not pin DNS results, provide a gateway/session authentication layer, or implement browser document rewriting. No website compatibility or comparative performance benchmarks have been run.

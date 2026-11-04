@@ -47,9 +47,9 @@ function toWebSocketData(
 }
 export default function (client: ScramjetClient, self: GlobalThis) {
 	const socketmap: WeakMap<WebSocket, FakeWebSocketState> =
-		new _WeakMap() as WeakMap<WebSocket, FakeWebSocketState>;
+		new _WeakMap([]) as WeakMap<WebSocket, FakeWebSocketState>;
 	const socketstreammap: WeakMap<WebSocketStream, FakeWebSocketStreamState> =
-		new _WeakMap() as WeakMap<WebSocketStream, FakeWebSocketStreamState>;
+		new _WeakMap([]) as WeakMap<WebSocketStream, FakeWebSocketStreamState>;
 	client.Proxy("WebSocket", {
 		construct(ctx) {
 			const fakeWebSocket = new EventTarget() as WebSocket;
@@ -287,7 +287,7 @@ export default function (client: ScramjetClient, self: GlobalThis) {
 
 	client.Proxy("WebSocketStream", {
 		construct(ctx) {
-			const fakeWebSocket = {};
+			const fakeWebSocket = {} as WebSocketStream;
 			Object_setPrototypeOf(fakeWebSocket, ctx.fn.prototype);
 			fakeWebSocket.constructor = ctx.fn;
 
